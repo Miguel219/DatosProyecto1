@@ -9,30 +9,45 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="325.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
+<BorderPane prefHeight="514.0" prefWidth="1013.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainController">
    <center>
       <BorderPane prefHeight="392.0" prefWidth="510.0" BorderPane.alignment="CENTER">
          <center>
-            <AnchorPane prefHeight="323.0" prefWidth="447.0" style="-fx-background-color: #7bf610;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="353.0" prefWidth="511.0" style="-fx-background-color: #7bf610;" BorderPane.alignment="CENTER">
                <children>
-                  <TextField fx:id="pathTextField" layoutX="79.0" layoutY="87.0" prefHeight="26.0" prefWidth="350.0" style="-fx-border-color: blue;" />
-                  <Label layoutX="131.0" layoutY="42.0" text="Ingresa la dirección del archivo" textFill="#0f22d5">
+                  <TextField fx:id="pathTextField" layoutX="334.0" layoutY="104.0" prefHeight="26.0" prefWidth="350.0" style="-fx-border-color: blue;" />
+                  <Label layoutX="389.0" layoutY="66.0" text="Ingresa la dirección del archivo" textFill="#0f22d5">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Button layoutX="234.0" layoutY="133.0" mnemonicParsing="false" onAction="#read" style="-fx-background-color: blue;" text="Leer" textFill="WHITE">
+                  <Button layoutX="488.0" layoutY="146.0" mnemonicParsing="false" onAction="#read" style="-fx-background-color: blue;" text="Leer" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font></Button>
-                  <Label fx:id="result" layoutX="79.0" layoutY="190.0" prefHeight="35.0" prefWidth="127.0" text="Resultados:" textFill="#161df8">
+                  <Label fx:id="result" layoutX="21.0" layoutY="190.0" prefHeight="35.0" prefWidth="127.0" text="Código:" textFill="#161df8">
                      <font>
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ScrollPane hbarPolicy="NEVER" layoutX="218.0" layoutY="190.0" prefHeight="111.0" prefWidth="249.0">
+                  <ScrollPane layoutX="148.0" layoutY="190.0" prefHeight="311.0" prefWidth="346.0">
                      <content>
-                        <FlowPane fx:id="resultFlowPane" prefHeight="200.0" prefWidth="250.0" />
+                        <FlowPane fx:id="codeFlowPane" prefHeight="308.0" prefWidth="330.0" />
+                     </content>
+                  </ScrollPane>
+                  <Label layoutX="460.0" layoutY="32.0" text="PROYECTO 2" textFill="#0f22d5">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="result1" layoutX="509.0" layoutY="190.0" prefHeight="35.0" prefWidth="127.0" text="Resultado:" textFill="#161df8">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane layoutX="636.0" layoutY="190.0" prefHeight="312.0" prefWidth="346.0">
+                     <content>
+                        <FlowPane fx:id="resultFlowPane" prefHeight="307.0" prefWidth="336.0" style="-fx-background-color: black;" />
                      </content>
                   </ScrollPane>
                </children>

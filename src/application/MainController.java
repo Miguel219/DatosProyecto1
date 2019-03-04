@@ -19,12 +19,18 @@ public class MainController {
 	@FXML
 	private Label result;
 	@FXML	
+	private FlowPane codeFlowPane;
+	@FXML	
 	private FlowPane resultFlowPane;
 	
 	/**
 	 * Objeto de la clase que implementa Stack 
 	 */
 	private StackImp stack;
+	/**
+	 * Objeto de la clase que decodifica el codigo Lisp 
+	 */
+	private Decodificador decodificador;
 	/**
 	 * objeto de la clase que implementa Calculator
 	 */
@@ -42,42 +48,23 @@ public class MainController {
 		if(verifyPath()) {
 			//Se recorre todo el archivo
 			String line = "";
+			int i = 0;
 			while (s.hasNextLine()) {
+				i = i +1;
 				line = s.nextLine()+ " ";
-				//Se hace un arreglo de strings
-				String[] text = line.split(" ");
-				//Se recorre la linea del archivo txt
-				for (int i = 0; i < text.length; i++) {
-					String value = text[i];
-					//Se guarda el valor en el stack
-					try {
-						//Se intenta convertir a int
-						Integer intValue = Integer.parseInt(value);
-						stack.push(intValue);
-					} catch (Exception e) {
-						// TODO: handle exception
-						//Si no es int es un operando entonces ya se puede efectuar la operacion
-						//Se sacan la operacion y los dos operandos
-						String operacion = value;
-						int operando1 = stack.pop();
-						int operando2 = stack.pop();
-						//Se hace la operacion
-						int resultado = calculator.Calculate(operando1, operando2, operacion);
-						//Se guarda el resultado en la primera posicion del stack
-						stack.push(resultado);
-					}
-				}
-				Label label = new Label("Resultado: "+stack.pop());
+				//Se utiliza el objero decodificador para leer la linea
+				String result = decodificador.decod(line);
+				Label label = new Label(i+".	"+result);
 				Region p = new Region();
 				p.setPrefSize(347.0, 4.0);
 				Line linee = new Line(0, 0, 350, 0);
 				Region p1 = new Region();
 				p1.setPrefSize(347.0, 4.0);
 				//Se agregan al FlowPane
-				resultFlowPane.getChildren().add(label);
-				resultFlowPane.getChildren().add(p);
-				resultFlowPane.getChildren().add(linee);
-				resultFlowPane.getChildren().add(p1);
+				codeFlowPane.getChildren().add(label);
+				codeFlowPane.getChildren().add(p);
+				codeFlowPane.getChildren().add(linee);
+				codeFlowPane.getChildren().add(p1);
 			}
 		}
 	}
@@ -106,6 +93,7 @@ public class MainController {
     public void initialize() {
 		stack = new StackImp();
 		calculator = new ImpCalculadora();
+		decodificador = new Decodificador();
     }
 	
 }
