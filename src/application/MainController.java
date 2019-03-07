@@ -53,19 +53,20 @@ public class MainController {
 				i = i +1;
 				line = s.nextLine()+ " ";
 				//Se utiliza el objero decodificador para leer la linea
-				String result = decodificador.decod(line);
-				Label label = new Label(i+".	"+result);
+				decodificador.add(line);
+				Label label = new Label(i+".	"+line);
 				Region p = new Region();
-				p.setPrefSize(347.0, 4.0);
-				Line linee = new Line(0, 0, 350, 0);
+				p.setPrefSize(550.0, 4.0);
+				Line linee = new Line(0, 0, 560, 0);
 				Region p1 = new Region();
-				p1.setPrefSize(347.0, 4.0);
+				p1.setPrefSize(550.0, 4.0);
 				//Se agregan al FlowPane
 				codeFlowPane.getChildren().add(label);
 				codeFlowPane.getChildren().add(p);
 				codeFlowPane.getChildren().add(linee);
 				codeFlowPane.getChildren().add(p1);
 			}
+			
 		}
 	}
 	

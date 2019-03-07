@@ -30,9 +30,9 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ScrollPane layoutX="148.0" layoutY="190.0" prefHeight="311.0" prefWidth="346.0">
+                  <ScrollPane hbarPolicy="NEVER" layoutX="148.0" layoutY="190.0" prefHeight="311.0" prefWidth="346.0">
                      <content>
-                        <FlowPane fx:id="codeFlowPane" prefHeight="308.0" prefWidth="330.0" />
+                        <FlowPane fx:id="codeFlowPane" prefHeight="308.0" prefWidth="488.0" />
                      </content>
                   </ScrollPane>
                   <Label layoutX="460.0" layoutY="32.0" text="PROYECTO 2" textFill="#0f22d5">
@@ -45,9 +45,9 @@
                         <Font size="24.0" />
                      </font>
                   </Label>
-                  <ScrollPane layoutX="636.0" layoutY="190.0" prefHeight="312.0" prefWidth="346.0">
+                  <ScrollPane hbarPolicy="NEVER" layoutX="636.0" layoutY="190.0" prefHeight="312.0" prefWidth="346.0">
                      <content>
-                        <FlowPane fx:id="resultFlowPane" prefHeight="307.0" prefWidth="336.0" style="-fx-background-color: black;" />
+                        <FlowPane fx:id="resultFlowPane" prefHeight="309.0" prefWidth="487.0" style="-fx-background-color: black;" />
                      </content>
                   </ScrollPane>
                </children>
