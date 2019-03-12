@@ -7,11 +7,14 @@ public class Decodificador {
 
 	private ArrayList<Function> functions;
 	private ArrayList<String> text;
+	private ArrayList<String> result;
+	private int i;
 	
 	public Decodificador() {
 		// TODO Auto-generated constructor stub
 		functions = new ArrayList<>();
 		text = new ArrayList<String>();
+		result = new ArrayList<String>();
 	}
 	
 	public void add(String line) {
@@ -20,14 +23,18 @@ public class Decodificador {
 		//Se hace un arreglo de strings
 		String[] textList = line.split(" ");
 		//Se recorre la linea del archivo para guardar todas las operaciones
-		for (int i = 0; i < textList.length; i++) {
+		for (i = 0; i < textList.length; i++) {
 			String value = textList[i];
-			System.out.println(value);
 			if(!value.equals("")) {
 				while((value.contains("("))&&(value.length()>1)) {
 					if((value.contains("("))&&(value.length()>1)) {
-						text.add(value.substring(0, 1));
-						value = value.substring(1);					
+						if(value.indexOf("(")==0) {
+							text.add(value.substring(0, 1));
+							value = value.substring(1);		
+						}else {
+							text.add(value.substring(0,value.indexOf("(")));
+							value = value.substring(value.indexOf("("));		
+						}
 					}
 				}
 				if((value.contains(")"))&&(value.length()>1)) {
@@ -44,21 +51,26 @@ public class Decodificador {
 				
 			}
 		}
-		
-		for (int i = 0; i < text.size(); i++) {
+		//Se lee el archivo ya ordenado desde el principio		
+		for (i = 0; i < text.size(); i++) {
 			String value = text.get(i);
+			System.out.println(value);
 			if(value.equals("DEFUN")) {
-				createFun(i);
-			}
+				createFun();
+			}else if((value.equals("="))||(value.equals("EQUAL"))||(value.equals(">"))||(value.equals("<"))||(value.equals("ATOM"))) {
+				result.add(executeComp());
+			}else if(value.equals("COND")) {
+				executeCond();
+			}//Falta completar que ejecute funciones, operaciones aritmeticas y constantes
 		}
 	}
 
-	public void createFun(int i) {
+	public void createFun() {
 		Function function = new Function();
 		int indicator = 1;
 		int j = i;
 		Boolean bodyStarted = false;
-		String body = "";
+		ArrayList<String> body = new ArrayList<>();
 		//Se evalua si ya se acabo el cuerpo de la funcion
 		while(indicator != 0) {
 			j = j + 1;
@@ -66,51 +78,119 @@ public class Decodificador {
 			
 			if(j == i+1) {
 				function.setName(valueInFunction);
-			}else if(j == i+2) {
-				function.setParamName(valueInFunction);
-			}else if(valueInFunction.equals("(")) {
+			}else if(j == i+3) {
+				do {
+					function.setParamName(valueInFunction);
+					j = j + 1;
+					valueInFunction = text.get(j);
+				}while(!valueInFunction.equals(")"));
 				bodyStarted = true;
 			}
 			
 			//Se lleva el conteo de "(" y ")" en la funcion para saber cuando se termina
-			if(valueInFunction.contains("(")) {
+			if(valueInFunction.equals("(")) {
 				indicator = indicator + 1;
-			}else if(valueInFunction.contains(")")) {
+			}else if(valueInFunction.equals(")")) {
 				indicator = indicator - 1;
 			}
 			
 			//Se agrega el cuerpo de la funcion
 			if((bodyStarted)&&(indicator!=0)) {
-				body = body + valueInFunction;
-			}
-			
+				body.add(valueInFunction);
+			}			
 		}
+		i = j;
+		body.remove(0);
 		function.setBody(body);
 		functions.add(function);
 	}
 	
-	public String executeCond(int i) {
+	public String executeComp() {
+		String resultComp = "false";
 		int indicator = 1;
 		int j = i;
-		String cond = "";
-		//Se evalua si ya se acabo el cuerpo de la funcion
+		j = j + 1;
+		String valueInCondition = text.get(j);
+		if(valueInCondition.equals("=")) {
+			if(text.get(j+1).equals(text.get(j+2))) {
+				resultComp = "true";
+			}
+		}else if(valueInCondition.equals("EQUAL")) {
+			if(text.get(j+1).equals(text.get(j+2))) {
+				resultComp = "true";
+			}
+		}else if(valueInCondition.equals(">")) {
+			if(Integer.parseInt(text.get(j+1)) > Integer.parseInt(text.get(j+2))) {
+				resultComp = "true";
+			}
+		}else if(valueInCondition.equals("<")) {
+			if(Integer.parseInt(text.get(j+1)) < Integer.parseInt(text.get(j+2))) {
+				resultComp = "true";
+			}
+		}else if(valueInCondition.equals("ATOM")) {
+			do {
+				j = j + 1;
+				valueInCondition = text.get(j);
+			}while(valueInCondition.equals("(")||valueInCondition.equals("("));
+			if(!valueInCondition.equals("CONS")) {
+				resultComp = "true";
+			}
+		}
+		j = i;
 		while(indicator != 0) {
 			j = j + 1;
-			String valueInCondition = text.get(j);
-			
-			
-			//Se lleva el conteo de "(" y ")" en la funcion para saber cuando se termina
-			if(valueInCondition.contains("(")) {
+			valueInCondition = text.get(j);
+			if(valueInCondition.equals("(")) {
 				indicator = indicator + 1;
-			}else if(valueInCondition.contains(")")) {
+			}else if (valueInCondition.equals(")")) {
 				indicator = indicator - 1;
 			}
-			
-			//Se guardan todas las condiciones
-			if(indicator==2) {
-				if(valueInCondition.contains("=")) {
-					if(text.get(j+1).equals(text.get(j+2))) {
-						return text.get(j+3);
+		}
+		i = j;
+		return resultComp;
+	}
+	
+	public String executeCond() {
+		int indicator = 1;
+		int j = i;
+		String valueInCondition = text.get(j);
+		while(indicator != 0) {
+			while((valueInCondition.equals(")"))||(valueInCondition.equals("("))){
+				j = j + 1;
+				valueInCondition = text.get(j);
+				if(valueInCondition.equals("(")) {
+					indicator = indicator + 1;
+				}else if(valueInCondition.equals(")")) {
+					indicator = indicator - 1;
+				}
+			};
+			i = j;
+			String resultBool = executeComp();
+			j = i;
+			if(resultBool.equals("true")) {
+				while((valueInCondition.equals(")"))||(valueInCondition.equals("("))) {
+					j = j + 1;
+					valueInCondition = text.get(j);
+					if(valueInCondition.equals("(")) {
+						indicator = indicator + 1;
+					}else if(valueInCondition.equals(")")) {
+						indicator = indicator - 1;
+					}
+				};
+				if((valueInCondition.equals("="))||(valueInCondition.equals("EQUAL"))||(valueInCondition.equals(">"))||(valueInCondition.equals("<"))||(valueInCondition.equals("ATOM"))) {
+					return executeComp();
+				}else if(valueInCondition.equals("COND")) {
+					executeCond();
+				}//Falta completar que ejecute funciones, operaciones aritmeticas y constantes
+			}else if(resultBool.equals("false")) {
+				//Repite el ciclo hasta llegar a la siguiente instruccion
+				while(indicator != 1) {
+					j = j + 1;
+					valueInCondition = text.get(j);
+					if(valueInCondition.equals("(")) {
+						indicator = indicator + 1;
+					}else if(valueInCondition.equals(")")) {
+						indicator = indicator - 1;
 					}
 				}
 			}
@@ -118,7 +198,7 @@ public class Decodificador {
 		return null;
 	}
 	
-	public Integer executeOperation(int i) {
+	public Integer executeOperation() {
 		
 		return i;
 	}

@@ -1,12 +1,13 @@
 package application;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class Function {
 
 	private String name;
 	private LinkedHashMap<String, String> params;
-	private String body;
+	private ArrayList<String> body;
 
 	/**
 	 * Creador sin parametros
@@ -15,6 +16,7 @@ public class Function {
 		// TODO Auto-generated constructor stub
 		name = "";
 		params = new LinkedHashMap<>();
+		body = new ArrayList<>();
 	}
 
 	/**
@@ -48,14 +50,16 @@ public class Function {
 	/**
 	 * @return the body
 	 */
-	public String getBody() {
+	public ArrayList<String> getBody() {
 		return body;
 	}
 
 	/**
 	 * @param body the body to set
 	 */
-	public void setBody(String body) {
+	public void setBody(ArrayList<String> body) {
 		this.body = body;
 	}
+
+	
 }
