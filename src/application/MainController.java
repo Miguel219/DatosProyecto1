@@ -1,6 +1,7 @@
 package application;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
 public class MainController {
@@ -68,7 +70,25 @@ public class MainController {
 			}
 
 			//Se utiliza el objero decodificador para leer la linea
-			decodificador.add(code);
+			ArrayList<String> result = decodificador.add(code);
+			System.out.println(result.size());
+			for (int j = 0; j < result.size(); j++) {
+				String currentResult = result.get(j);
+				
+				Label label = new Label(currentResult);
+				label.setTextFill(Color.WHITE);;
+				Region p = new Region();
+				p.setPrefSize(600.0, 4.0);
+				Line linee = new Line(0, 0, 600, 0);
+				linee.setStroke(Color.WHITE);
+				Region p1 = new Region();
+				p1.setPrefSize(600.0, 4.0);
+				//Se agregan al FlowPane
+				resultFlowPane.getChildren().add(label);
+				resultFlowPane.getChildren().add(p);
+				resultFlowPane.getChildren().add(linee);
+				resultFlowPane.getChildren().add(p1);
+			}
 		}
 	}
 	

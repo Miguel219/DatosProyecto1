@@ -17,7 +17,7 @@ public class Decodificador {
 		result = new ArrayList<String>();
 	}
 	
-	public void add(String line) {
+	public ArrayList<String> add(String line) {
 		//el resultado que se devuelve a la vista
 		ArrayList<String> result = new ArrayList<>();
 		//Se hace un arreglo de strings
@@ -60,9 +60,13 @@ public class Decodificador {
 			}else if((value.equals("="))||(value.equals("EQUAL"))||(value.equals(">"))||(value.equals("<"))||(value.equals("ATOM"))) {
 				result.add(executeComp());
 			}else if(value.equals("COND")) {
-				executeCond();
-			}//Falta completar que ejecute funciones, operaciones aritmeticas y constantes
+				result.add(executeCond());
+			}
+			//Falta completar que ejecute funciones, operaciones aritmeticas y constantes
 		}
+		
+		return result;
+		
 	}
 
 	public void createFun() {
@@ -106,34 +110,37 @@ public class Decodificador {
 	}
 	
 	public String executeComp() {
-		String resultComp = "false";
+		String resultComp = "NIL";
 		int indicator = 1;
 		int j = i;
-		j = j + 1;
 		String valueInCondition = text.get(j);
+		while(valueInCondition.equals("(")||valueInCondition.equals("(")) {
+			j = j + 1;
+			valueInCondition = text.get(j);
+		};
 		if(valueInCondition.equals("=")) {
 			if(text.get(j+1).equals(text.get(j+2))) {
-				resultComp = "true";
+				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("EQUAL")) {
 			if(text.get(j+1).equals(text.get(j+2))) {
-				resultComp = "true";
+				resultComp = "T";
 			}
 		}else if(valueInCondition.equals(">")) {
 			if(Integer.parseInt(text.get(j+1)) > Integer.parseInt(text.get(j+2))) {
-				resultComp = "true";
+				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("<")) {
 			if(Integer.parseInt(text.get(j+1)) < Integer.parseInt(text.get(j+2))) {
-				resultComp = "true";
+				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("ATOM")) {
 			do {
 				j = j + 1;
 				valueInCondition = text.get(j);
 			}while(valueInCondition.equals("(")||valueInCondition.equals("("));
-			if(!valueInCondition.equals("CONS")) {
-				resultComp = "true";
+			if(text.get(j+1).equals(")")) {
+				resultComp = "T";
 			}
 		}
 		j = i;
