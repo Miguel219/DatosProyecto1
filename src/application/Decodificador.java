@@ -167,7 +167,7 @@ public class Decodificador {
 		//Se recorre el cuerpo de la funcion para ejecutarla
 		for (int k = 0; k < body.size(); k++) {
 			String valueInBody = body.get(k);
-			if(((!valueInBody.equals(")"))||(!valueInBody.equals("(")))&&(result.equals(""))) {
+			if(((!valueInBody.equals(")"))&&(!valueInBody.equals("(")))&&(result.equals(""))) {
 				if((valueInBody.equals("="))||(valueInBody.equals("EQUAL"))||(valueInBody.equals(">"))||(valueInBody.equals("<"))||(valueInBody.equals("ATOM"))) {
 					int indice = i;
 					i = currentFun.getPosition();
