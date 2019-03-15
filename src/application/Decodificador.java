@@ -350,7 +350,7 @@ public class Decodificador {
 			j = j + 1;
 			valueInCondition = text.get(j);
 		};
-		while(indicator != 0) {
+		while((indicator != 0)&&(result.equals(""))) {
 			valueInCondition = text.get(j+1);
 			while((!valueInCondition.equals("="))&&(!valueInCondition.equals("EQUAL"))&&(!valueInCondition.equals(">"))&&(!valueInCondition.equals("<"))&&(!valueInCondition.equals("ATOM"))){
 				j = j + 1;
@@ -409,17 +409,6 @@ public class Decodificador {
 							result = valueInCondition;
 						}
 					}
-				}else if(resultBool.equals("false")) {
-					//Repite el ciclo hasta llegar a la siguiente instruccion
-					while(indicator != 1) {
-						j = j + 1;
-						valueInCondition = text.get(j);
-						if(valueInCondition.equals("(")) {
-							indicator = indicator + 1;
-						}else if(valueInCondition.equals(")")) {
-							indicator = indicator - 1;
-						}
-					}
 				}
 			}
 		}
@@ -436,7 +425,7 @@ public class Decodificador {
 		if(valueInOperation.equals("+")|| valueInOperation.equals("*") ||valueInOperation.equals("/")||valueInOperation.equals("-")) {
 			OperatorStack.push(valueInOperation);
 		}
-		while(indicator != 0) {
+		while((indicator != 0)||(OperatorStack.size()!=3)) {
 			j = j + 1;
 			valueInOperation = text.get(j);
 				
@@ -446,11 +435,16 @@ public class Decodificador {
 				indicator = indicator - 1;
 			}else if(valueInOperation.equals("COND")) {
 				i = j;
-				OperatorStack.push(executeCond());
+				if(OperatorStack.size()!=3) {
+					OperatorStack.push(executeCond());
+				}
+				indicator = indicator - 1;
 				j = i;
 			}else if(valueInOperation.equals("+")|| valueInOperation.equals("*") ||valueInOperation.equals("/")||valueInOperation.equals("-")) {
 				i = j;
-				OperatorStack.push(executeOperation());
+				if((OperatorStack.size()!=3)) {
+					OperatorStack.push(executeOperation());
+				}
 				indicator = indicator - 1;
 				j = i;
 			}
@@ -462,16 +456,22 @@ public class Decodificador {
 					if(valueInOperation.equals(functionName)) {
 						saved = true;
 						i = j;
-						OperatorStack.push(executeFun(k));
+						if(OperatorStack.size()!=3){
+							OperatorStack.push(executeFun(k));
+						}
 						j = i;
 					}else if(functionParams.containsKey(valueInOperation)) {
 						saved = true;
-						OperatorStack.push(functionParams.get(valueInOperation));
+						if(OperatorStack.size()!=3){
+							OperatorStack.push(functionParams.get(valueInOperation));
+						}
 					}
 				}
 				//Si no es una llamada a una funcion es un numero entero
 				if(!saved) {
-					OperatorStack.push(valueInOperation);
+					if(OperatorStack.size()!=3) {
+						OperatorStack.push(valueInOperation);
+					}
 				}
 			}
 		}
