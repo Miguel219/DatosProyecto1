@@ -1,10 +1,10 @@
 (DEFUN factorial (num) 
     (*
+        num
         (COND 
             ((= num 1) 1)
             ((ATOM 1) (factorial (- num 1)))
         )
-        num
     )
 )
 (DEFUN queTanBienLeCaigoADiego(nombre)

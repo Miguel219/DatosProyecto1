@@ -2,6 +2,7 @@ package application;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -198,20 +199,6 @@ public class Decodificador {
 			}
 		}
 		i = j;
-		//Se recorre el cuerpo de la funcion para setear los valores de los parametros
-		for (int k = 0; k < body.size(); k++) {
-			String valueInBody = body.get(k);
-			if(currentFun.getParams().containsKey(valueInBody)) {
-				body.set(k,currentFun.getParams().get(valueInBody));
-			};
-		}
-		//Se recorre el cuerpo de la funcion para setear los valores de los parametros
-		for (int k = 0; k < text.size(); k++) {
-			String valueInBody = text.get(k);
-			if(currentFun.getParams().containsKey(valueInBody)) {
-				text.set(k,currentFun.getParams().get(valueInBody));
-			};
-		}
 		//Se recorre el cuerpo de la funcion para ejecutarla
 		for (int k = 0; k < body.size(); k++) {
 			String valueInBody = body.get(k);
@@ -276,19 +263,59 @@ public class Decodificador {
 			valueInCondition = text.get(j);
 		};
 		if(valueInCondition.equals("=")) {
-			if(text.get(j+1).equals(text.get(j+2))) {
+			String val1 = text.get(j+1);
+			String val2 = text.get(j+2);
+			for (int k = 0; k < functions.size(); k++) {
+				HashMap<String, String> functionParams = functions.get(k).getParams();
+				if(functionParams.containsKey(val1)) {	
+					val1 = functionParams.get(val1);
+				}else if(functionParams.containsKey(val2)) {	
+					val1 = functionParams.get(val2);
+				}
+			}
+			if(val1.equals(val2)) {
 				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("EQUAL")) {
-			if(text.get(j+1).equals(text.get(j+2))) {
+			String val1 = text.get(j+1);
+			String val2 = text.get(j+2);
+			for (int k = 0; k < functions.size(); k++) {
+				HashMap<String, String> functionParams = functions.get(k).getParams();
+				if(functionParams.containsKey(val1)) {	
+					val1 = functionParams.get(val1);
+				}else if(functionParams.containsKey(val2)) {	
+					val1 = functionParams.get(val2);
+				}
+			}
+			if(val1.equals(val2)) {
 				resultComp = "T";
 			}
 		}else if(valueInCondition.equals(">")) {
-			if(Integer.parseInt(text.get(j+1)) > Integer.parseInt(text.get(j+2))) {
+			String val1 = text.get(j+1);
+			String val2 = text.get(j+2);
+			for (int k = 0; k < functions.size(); k++) {
+				HashMap<String, String> functionParams = functions.get(k).getParams();
+				if(functionParams.containsKey(val1)) {	
+					val1 = functionParams.get(val1);
+				}else if(functionParams.containsKey(val2)) {	
+					val1 = functionParams.get(val2);
+				}
+			}
+			if(Integer.parseInt(val1) > Integer.parseInt(val2)) {
 				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("<")) {
-			if(Integer.parseInt(text.get(j+1)) < Integer.parseInt(text.get(j+2))) {
+			String val1 = text.get(j+1);
+			String val2 = text.get(j+2);
+			for (int k = 0; k < functions.size(); k++) {
+				HashMap<String, String> functionParams = functions.get(k).getParams();
+				if(functionParams.containsKey(val1)) {	
+					val1 = functionParams.get(val1);
+				}else if(functionParams.containsKey(val2)) {	
+					val1 = functionParams.get(val2);
+				}
+			}
+			if(Integer.parseInt(val1) < Integer.parseInt(val2)) {
 				resultComp = "T";
 			}
 		}else if(valueInCondition.equals("ATOM")) {
@@ -325,7 +352,7 @@ public class Decodificador {
 		};
 		while(indicator != 0) {
 			valueInCondition = text.get(j+1);
-			while((!valueInCondition.equals("="))&&(!valueInCondition.equals("EQUAL"))&&(!valueInCondition.equals(">"))&&(!valueInCondition.equals("<"))&&(!valueInCondition.equals("ATOM"))){
+			while((!valueInCondition.equals("="))||(!valueInCondition.equals("EQUAL"))||(!valueInCondition.equals(">"))||(!valueInCondition.equals("<"))||(!valueInCondition.equals("ATOM"))){
 				j = j + 1;
 				valueInCondition = text.get(j);
 				if(valueInCondition.equals("(")) {
@@ -366,11 +393,15 @@ public class Decodificador {
 						boolean saved = false;
 						for (int k = 0; k < functions.size(); k++) {
 							String functionName = functions.get(k).getName();
+							HashMap<String, String> functionParams = functions.get(k).getParams();
 							if(valueInCondition.equals(functionName)) {
 								saved = true;
 								i = j;
 								result = executeFun(k);
 								j = i;
+							}else if(functionParams.containsKey(valueInCondition)) {
+								saved = true;	
+								result = functionParams.get(valueInCondition);
 							}
 						}
 						//Si no es una llamada a una funcion es un numero entero
@@ -378,7 +409,7 @@ public class Decodificador {
 							result = valueInCondition;
 						}
 					}
-				}else if(resultBool.equals("false")) {
+				}else if(resultBool.equals("NIL")) {
 					//Repite el ciclo hasta llegar a la siguiente instruccion
 					while(indicator != 1) {
 						j = j + 1;
@@ -427,11 +458,15 @@ public class Decodificador {
 				boolean saved = false;
 				for (int k = 0; k < functions.size(); k++) {
 					String functionName = functions.get(k).getName();
+					HashMap<String, String> functionParams = functions.get(k).getParams();
 					if(valueInOperation.equals(functionName)) {
 						saved = true;
 						i = j;
 						OperatorStack.push(executeFun(k));
 						j = i;
+					}else if(functionParams.containsKey(valueInOperation)) {
+						saved = true;
+						OperatorStack.push(functionParams.get(valueInOperation));
 					}
 				}
 				//Si no es una llamada a una funcion es un numero entero
