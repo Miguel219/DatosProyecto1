@@ -1,5 +1,12 @@
 package application;
 
+/**
+ * Silvio Orozco 18282
+ * Jose Castaneda 18161
+ * Roberto Castillo 185546
+ * 
+ * Proyecto 1 	15/3/2019
+ */
 public class OperationCalculator implements Calculator {
 	
 	

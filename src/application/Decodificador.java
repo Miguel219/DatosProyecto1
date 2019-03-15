@@ -1,5 +1,12 @@
 package application;
 
+/**
+ * Silvio Orozco 18282
+ * Jose Castaneda 18161
+ * Roberto Castillo 185546
+ * 
+ * Proyecto 1 	15/3/2019
+ */
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +28,11 @@ public class Decodificador {
 		result = new ArrayList<String>();
 	}
 	
+	/**
+	 * Esta funcion lee todo el codigo en lisp
+	 * @param line el codigo en lisp
+	 * @return result = los resultados al ejecutar el codigo
+	 */
 	public ArrayList<String> add(String line) {
 		//el resultado que se devuelve a la vista
 		ArrayList<String> result = new ArrayList<>();
@@ -90,6 +102,9 @@ public class Decodificador {
 		
 	}
 
+	/**
+	 * Esta funcion crea un objeto de tipo Function() 
+	 */
 	public void createFun() {
 		Function function = new Function();
 		int indicator = 1;
@@ -131,6 +146,11 @@ public class Decodificador {
 		functions.add(function);
 	}
 	
+	/**
+	 * Esta funcion ejecuta la funcion al ser llamada
+	 * @param j = el indice de la funcion llamada
+	 * @return result = el resultado que se produce al ejecutar la funcion 
+	 */
 	public String executeFun(int j) {
 		//Se inicializa el result de la funcion
 		String result = "";
@@ -253,6 +273,10 @@ public class Decodificador {
 		return result;
 	}
 	
+	/**
+	 * funcion que ejecuta una comparacion
+	 * @return result = el resultado al ejecutar una comparacion (T o NIL) 
+	 */
 	public String executeComp() {
 		String resultComp = "NIL";
 		int indicator = 1;
@@ -341,6 +365,10 @@ public class Decodificador {
 		return resultComp;
 	}
 	
+	/**
+	 * Funcion que ejecuta una condicion
+	 * @return result = el resultado al ejecutar una condicion
+	 */
 	public String executeCond() {
 		String result = "";
 		int indicator = 1;
@@ -415,6 +443,10 @@ public class Decodificador {
 		return result;
 	}
 	
+	/**
+	 * Funcion que ejecuta una operacion (+ o - o * o /)
+	 * @return result = resultado al hacer una de las siguientes operaciones (+ o - o * o /)
+	 */
 	public String executeOperation() {
 		OperationCalculator MyCalculator = new OperationCalculator();
 		OperationStack OperatorStack = new OperationStack();

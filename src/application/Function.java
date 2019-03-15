@@ -1,5 +1,12 @@
 package application;
 
+/**
+ * Silvio Orozco 18282
+ * Jose Castaneda 18161
+ * Roberto Castillo 185546
+ * 
+ * Proyecto 1 	15/3/2019
+ */
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
@@ -42,7 +49,8 @@ public class Function {
 	}
 
 	/**
-	 * @param params the params to set
+	 * setea el nombre del parametro de una funcion
+	 * @param paramName = el nombre del parametro
 	 */
 	public void setParamName(String paramName) {
 		params.put(paramName, "");
