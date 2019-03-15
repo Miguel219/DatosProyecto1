@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 public class Function {
 
 	private String name;
+	private int position;
 	private LinkedHashMap<String, String> params;
 	private ArrayList<String> body;
 
@@ -59,6 +60,20 @@ public class Function {
 	 */
 	public void setBody(ArrayList<String> body) {
 		this.body = body;
+	}
+
+	/**
+	 * @return the position
+	 */
+	public int getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 	
