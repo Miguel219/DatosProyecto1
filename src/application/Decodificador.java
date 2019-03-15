@@ -352,7 +352,7 @@ public class Decodificador {
 		};
 		while(indicator != 0) {
 			valueInCondition = text.get(j+1);
-			while((!valueInCondition.equals("="))||(!valueInCondition.equals("EQUAL"))||(!valueInCondition.equals(">"))||(!valueInCondition.equals("<"))||(!valueInCondition.equals("ATOM"))){
+			while((!valueInCondition.equals("="))&&(!valueInCondition.equals("EQUAL"))&&(!valueInCondition.equals(">"))&&(!valueInCondition.equals("<"))&&(!valueInCondition.equals("ATOM"))){
 				j = j + 1;
 				valueInCondition = text.get(j);
 				if(valueInCondition.equals("(")) {
@@ -409,7 +409,7 @@ public class Decodificador {
 							result = valueInCondition;
 						}
 					}
-				}else if(resultBool.equals("NIL")) {
+				}else if(resultBool.equals("false")) {
 					//Repite el ciclo hasta llegar a la siguiente instruccion
 					while(indicator != 1) {
 						j = j + 1;
