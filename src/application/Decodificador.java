@@ -10,6 +10,7 @@ public class Decodificador {
 	private ArrayList<Function> functions;
 	private ArrayList<String> text;
 	private ArrayList<String> result;
+	private ArrayList<String> operations;
 	private int i;
 	
 	public Decodificador() {
@@ -63,6 +64,8 @@ public class Decodificador {
 				result.add(executeComp());
 			}else if(value.equals("COND")) {
 				result.add(executeCond());
+			}else if(value.equals("+")|| value.equals("*") ||value.equals("/")||value.equals("-")) {
+				result.add(executeOperation());
 			}else {
 				boolean saved = false;
 				for (int j = 0; j < functions.size(); j++) {
@@ -175,6 +178,11 @@ public class Decodificador {
 					i = currentFun.getPosition();
 					result = executeCond();
 					i = indice;
+				}else if(valueInBody.equals("+")|| valueInBody.equals("*") ||valueInBody.equals("/")||valueInBody.equals("-")) {
+					int indice = i;
+					i = currentFun.getPosition();
+					result = executeOperation();
+					i = indice;
 				}else {
 					boolean saved = false;
 					for (int l = 0; l < functions.size(); l++) {
@@ -284,7 +292,12 @@ public class Decodificador {
 						i = j;
 						result = executeCond();
 						j = i;
-					}else {
+					}else if(valueInCondition.equals("+")|| valueInCondition.equals("*") ||valueInCondition.equals("/")||valueInCondition.equals("-")) {
+						i = j;
+						result = executeOperation();
+						j = i;
+					}
+					else {
 						boolean saved = false;
 						for (int k = 0; k < functions.size(); k++) {
 							String functionName = functions.get(k).getName();
@@ -317,9 +330,55 @@ public class Decodificador {
 		return result;
 	}
 	
-	public Integer executeOperation() {
-		
-		return i;
+	public String executeOperation() {
+		OperationCalculator MyCalculator = new OperationCalculator();
+		String result = "";
+		int indicator = 1;
+		int j = i;
+		OperationStack OperatorStack = new OperationStack();
+		String valueInOperation = text.get(j);
+		OperatorStack.push(valueInOperation);
+		while(indicator != 0) {
+			valueInOperation = text.get(j);
+			while((valueInOperation.equals(")"))||(valueInOperation.equals("("))){
+				j = j + 1;
+				valueInOperation = text.get(j);
+				if(valueInOperation.equals("(")) {
+					indicator = indicator + 1;
+				}else if(valueInOperation.equals(")")) {
+					indicator = indicator - 1;
+				}
+			};
+			for (int k = 0; k < functions.size(); k++) {
+				String functionName = functions.get(k).getName();
+				if(valueInOperation.equals(functionName)) {
+					i = j;
+					result = executeFun(k);
+					j = i;
+				}
+			}
+			if(valueInOperation.equals("COND")) {
+				result= executeCond();
+				i=j;
+				OperatorStack.push(result);
+				j=i;
+			}else {
+				OperatorStack.push(valueInOperation);
+				j=j+1;
+				valueInOperation = text.get(j);
+			}
+		}
+		String num2;
+		String num1;
+		String signOperator;
+		while (OperatorStack.size()>0) {
+			num2 = OperatorStack.pop();
+			num1 = OperatorStack.pop();
+			signOperator= OperatorStack.pop();
+			result = MyCalculator.Calculate(num1, num2, signOperator);
+			OperatorStack.push(result);
+		}
+		return result;
 	}
 	
 }

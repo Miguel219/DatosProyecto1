@@ -28,7 +28,7 @@ public class MainController {
 	/**
 	 * Objeto de la clase que implementa Stack 
 	 */
-	private StackImp stack;
+	private OperationStack stack;
 	/**
 	 * Objeto de la clase que decodifica el codigo Lisp 
 	 */
@@ -36,7 +36,7 @@ public class MainController {
 	/**
 	 * objeto de la clase que implementa Calculator
 	 */
-	private ImpCalculadora calculator;
+	private OperationCalculator calculator;
 	/**
 	 * Es en donde se almacena la informacion leida en el archivo txt
 	 */
@@ -114,8 +114,8 @@ public class MainController {
 	
 	@FXML
     public void initialize() {
-		stack = new StackImp();
-		calculator = new ImpCalculadora();
+		stack = new OperationStack();
+		calculator = new OperationCalculator();
 		decodificador = new Decodificador();
     }
 	
