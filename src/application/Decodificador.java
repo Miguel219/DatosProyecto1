@@ -93,7 +93,6 @@ public class Decodificador {
 		Function function = new Function();
 		int indicator = 1;
 		int j = i;
-		function.setPosition(j);
 		Boolean bodyStarted = false;
 		ArrayList<String> body = new ArrayList<>();
 		//Se evalua si ya se acabo el cuerpo de la funcion
@@ -110,6 +109,7 @@ public class Decodificador {
 					valueInFunction = text.get(j);
 				}while(!valueInFunction.equals(")"));
 				bodyStarted = true;
+				function.setPosition(j+1);
 			}
 			
 			//Se lleva el conteo de "(" y ")" en la funcion para saber cuando se termina
@@ -144,15 +144,56 @@ public class Decodificador {
 		while(indicator != 0) {
 			j = j + 1;
 			String valueInFunction = text.get(j);
-			if(valueInFunction.equals("(")) {
-				indicator = indicator + 1;
-			}else if(valueInFunction.equals(")")) {
-				indicator = indicator - 1;
+			String paramValue = "";
+			if((valueInFunction.equals(")"))||(valueInFunction.equals("("))){
+				if(valueInFunction.equals("(")) {
+					indicator = indicator + 1;
+				}else if(valueInFunction.equals(")")) {
+					indicator = indicator - 1;
+				}
 			}else {
+				if((valueInFunction.equals("="))||(valueInFunction.equals("EQUAL"))||(valueInFunction.equals(">"))||(valueInFunction.equals("<"))||(valueInFunction.equals("ATOM"))) {
+					i = j;
+					paramValue = executeComp();
+					j = i;
+				}else if(valueInFunction.equals("COND")) {
+					i = j;
+					paramValue = executeCond();
+					j = i;
+				}else if(valueInFunction.equals("+")|| valueInFunction.equals("*") ||valueInFunction.equals("/")||valueInFunction.equals("-")) {
+					i = j;
+					paramValue = executeOperation();
+					j = i;
+				}else {
+					boolean saved = false;
+					for (int l = 0; l < functions.size(); l++) {
+						String functionName = functions.get(l).getName();
+						if(valueInFunction.equals(functionName)) {
+							saved = true;
+							int indice = i;
+							i = currentFun.getPosition();
+							paramValue = executeFun(j);
+							i = indice - 1;
+							while(indicator != 0) {
+								i = i + 1;
+								valueInFunction = text.get(i);
+								if(valueInFunction.equals("(")) {
+									indicator = indicator + 1;
+								}else if (valueInFunction.equals(")")) {
+									indicator = indicator - 1;
+								}
+							}
+						}
+					}
+					//Si no es una llamada a una funcion es un numero entero
+					if(!saved) {
+						paramValue = valueInFunction;
+					}
+				}
 				Set<Map.Entry<String, String>> mapSet = currentFun.getParams().entrySet();
 		        Map.Entry<String, String> param = (Map.Entry<String, String>) mapSet.toArray()[contadorParametros];
 		        //Se setea el valor del parametro
-		        param.setValue(valueInFunction);
+		        param.setValue(paramValue);
 		        contadorParametros = contadorParametros + 1;
 			}
 		}
@@ -164,23 +205,42 @@ public class Decodificador {
 				body.set(k,currentFun.getParams().get(valueInBody));
 			};
 		}
+		//Se recorre el cuerpo de la funcion para setear los valores de los parametros
+		for (int k = 0; k < body.size(); k++) {
+			String valueInBody = text.get(k);
+			if(currentFun.getParams().containsKey(valueInBody)) {
+				text.set(k,currentFun.getParams().get(valueInBody));
+			};
+		}
 		//Se recorre el cuerpo de la funcion para ejecutarla
 		for (int k = 0; k < body.size(); k++) {
 			String valueInBody = body.get(k);
 			if(((!valueInBody.equals(")"))&&(!valueInBody.equals("(")))&&(result.equals(""))) {
 				if((valueInBody.equals("="))||(valueInBody.equals("EQUAL"))||(valueInBody.equals(">"))||(valueInBody.equals("<"))||(valueInBody.equals("ATOM"))) {
 					int indice = i;
-					i = currentFun.getPosition();
+					i = currentFun.getPosition() - 1;
+					do {
+						i = i +1;
+						valueInBody = text.get(i);
+					}while((!valueInBody.equals("="))&&(!valueInBody.equals("EQUAL"))&&(!valueInBody.equals(">"))&&(!valueInBody.equals("<"))&&(!valueInBody.equals("ATOM")));
 					result = executeComp();
 					i = indice;
 				}else if(valueInBody.equals("COND")) {
 					int indice = i;
-					i = currentFun.getPosition();
+					i = currentFun.getPosition() - 1;
+					do {
+						i = i +1;
+						valueInBody = text.get(i);
+					}while(!valueInBody.equals("COND"));
 					result = executeCond();
 					i = indice;
 				}else if(valueInBody.equals("+")|| valueInBody.equals("*") ||valueInBody.equals("/")||valueInBody.equals("-")) {
 					int indice = i;
-					i = currentFun.getPosition();
+					i = currentFun.getPosition() - 1;
+					do {
+						i = i +1;
+						valueInBody = text.get(i);
+					}while(!valueInBody.equals("+")&& !valueInBody.equals("*") &&!valueInBody.equals("/")&&!valueInBody.equals("-"));
 					result = executeOperation();
 					i = indice;
 				}else {
@@ -259,8 +319,13 @@ public class Decodificador {
 		int indicator = 1;
 		int j = i;
 		String valueInCondition = text.get(j);
+		while(!valueInCondition.equals("COND")){
+			j = j + 1;
+			valueInCondition = text.get(j);
+		};
 		while(indicator != 0) {
-			while((valueInCondition.equals(")"))||(valueInCondition.equals("("))){
+			valueInCondition = text.get(j+1);
+			while((!valueInCondition.equals("="))&&(!valueInCondition.equals("EQUAL"))&&(!valueInCondition.equals(">"))&&(!valueInCondition.equals("<"))&&(!valueInCondition.equals("ATOM"))){
 				j = j + 1;
 				valueInCondition = text.get(j);
 				if(valueInCondition.equals("(")) {
