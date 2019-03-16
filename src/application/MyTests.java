@@ -16,12 +16,12 @@ public class MyTests {
     @Test
     public void DecodificatorTester() {
     	Decodificador MiDecodificador = new Decodificador();
-    	String line =("(/ 10 0)");
+    	String line =("(DEFUN sumaCon10 (num) (+ num 10))");    			
     	ArrayList<String> result = new ArrayList<String>();
+    	MiDecodificador.add(line);
+    	line="(sumaCon10 50)";
     	result= MiDecodificador.add(line);
-    	assertEquals("Error division por cero", result.get(0), "Este resultado debe dar error por division por cero");
-        
-        
+    	assertEquals("5", result.get(0), "Deberia de dar 100 porque le caemos bien a Diego");
     }
 
 	

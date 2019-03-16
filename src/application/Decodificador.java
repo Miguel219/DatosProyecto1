@@ -70,7 +70,7 @@ public class Decodificador {
 		//Se lee el archivo ya ordenado desde el principio		
 		for (i = 0; i < text.size(); i++) {
 			String value = text.get(i);
-			System.out.println(value);
+			
 			if(value.equals("DEFUN")) {
 				createFun();
 			}else if((value.equals("="))||(value.equals("EQUAL"))||(value.equals(">"))||(value.equals("<"))||(value.equals("ATOM"))) {
