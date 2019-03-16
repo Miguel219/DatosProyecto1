@@ -17,7 +17,7 @@ public class OperationCalculator implements Calculator {
 		int ans = 0;
 		int num1;
 		int num2;
-		String ansString;
+		String ansString="";
 		try {
 			num1 = Integer.parseInt(numA);
 					
@@ -58,7 +58,7 @@ public class OperationCalculator implements Calculator {
 		
 		if (op.equals("/")) {
 		
-			if (num2 != 0) {
+			if ((num2 !=0)) {
 				float an = (num1 / num2);
 				ans = (int)an;
 			} else {
@@ -66,7 +66,10 @@ public class OperationCalculator implements Calculator {
 			}
 			
 		}
-		ansString = Integer.toString(ans);
+		if(ansString=="") {
+			ansString = Integer.toString(ans);
+		}
+		
 		return ansString;
 	}
 }
