@@ -40,7 +40,7 @@ public class Decodificador {
 		String[] textList = line.split(" ");
 		//Se recorre la linea del archivo para guardar todas las operaciones
 		for (i = 0; i < textList.length; i++) {
-			String value = textList[i];
+			String value = textList[i].toUpperCase();
 			if(!value.equals("")) {
 				while((value.contains("("))&&(value.length()>1)) {
 					if((value.contains("("))&&(value.length()>1)) {

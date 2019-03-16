@@ -16,6 +16,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
@@ -32,6 +33,8 @@ public class MainController {
 	@FXML	
 	private FlowPane resultFlowPane;
 	
+	@FXML	
+	private Button buttonread;
 	/**
 	 * Objeto de la clase que implementa Stack 
 	 */
@@ -54,7 +57,9 @@ public class MainController {
 	 */
 	public void read() {
 		//Si ya se verifico y no hay error se lee el archivo
+		
 		if(verifyPath()) {
+			buttonread.setDisable(true);
 			//Se recorre todo el archivo
 			String line = "";
 			String code = "";
@@ -95,7 +100,9 @@ public class MainController {
 				resultFlowPane.getChildren().add(p);
 				resultFlowPane.getChildren().add(linee);
 				resultFlowPane.getChildren().add(p1);
+				
 			}
+			
 		}
 	}
 	

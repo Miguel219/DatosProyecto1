@@ -21,7 +21,7 @@
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <Button layoutX="488.0" layoutY="146.0" mnemonicParsing="false" onAction="#read" style="-fx-background-color: blue;" text="Leer" textFill="WHITE">
+                  <Button fx:id="buttonread" layoutX="488.0" layoutY="146.0" mnemonicParsing="false" onAction="#read" style="-fx-background-color: blue;" text="Leer" textFill="WHITE">
                      <font>
                         <Font size="14.0" />
                      </font></Button>
