@@ -16,12 +16,13 @@ public class MyTests {
     @Test
     public void DecodificatorTester() {
     	Decodificador MiDecodificador = new Decodificador();
-    	String line =("(DEFUN sumaCon10 (num) (+ num 10))");    			
+    	String line =("(DEFUN sumaCon10 (num)"
+    			+ " (+ 10 num))");    			
     	ArrayList<String> result = new ArrayList<String>();
     	MiDecodificador.add(line);
     	line="(sumaCon10 50)";
     	result= MiDecodificador.add(line);
-    	assertEquals("5", result.get(0), "Deberia de dar 100 porque le caemos bien a Diego");
+    	assertEquals("60", result.get(0), "Deberia de dar 100 porque le caemos bien a Diego");
     }
 
 	

@@ -113,7 +113,12 @@ public class Decodificador {
 		ArrayList<String> body = new ArrayList<>();
 		//Se evalua si ya se acabo el cuerpo de la funcion
 		while(indicator != 0) {
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
+			
 			String valueInFunction = text.get(j);
 			
 			if(j == i+1) {
@@ -121,7 +126,11 @@ public class Decodificador {
 			}else if(j == i+3) {
 				do {
 					function.setParamName(valueInFunction);
-					j = j + 1;
+					if(j==(text.size()-1)) {
+						break;
+					}else {
+						j = j + 1;
+					}
 					valueInFunction = text.get(j);
 				}while(!valueInFunction.equals(")"));
 				bodyStarted = true;
@@ -163,7 +172,11 @@ public class Decodificador {
 		int contadorParametros = 0;
 		j = i;
 		while(indicator != 0) {
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
 			String valueInFunction = text.get(j);
 			String paramValue = "";
 			if((valueInFunction.equals(")"))||(valueInFunction.equals("("))){
@@ -171,6 +184,7 @@ public class Decodificador {
 					indicator = indicator + 1;
 				}else if(valueInFunction.equals(")")) {
 					indicator = indicator - 1;
+					
 				}
 			}else {
 				if((valueInFunction.equals("="))||(valueInFunction.equals("EQUAL"))||(valueInFunction.equals(">"))||(valueInFunction.equals("<"))||(valueInFunction.equals("ATOM"))) {
@@ -193,7 +207,7 @@ public class Decodificador {
 							saved = true;
 							int indice = i;
 							i = currentFun.getPosition();
-							paramValue = executeFun(j);
+							paramValue = executeFun(l);
 							i = indice - 1;
 							while(indicator != 0) {
 								i = i + 1;
@@ -283,7 +297,11 @@ public class Decodificador {
 		int j = i;
 		String valueInCondition = text.get(j);
 		while(valueInCondition.equals("(")) {
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
 			valueInCondition = text.get(j);
 		};
 		if(valueInCondition.equals("=")) {
@@ -344,7 +362,11 @@ public class Decodificador {
 			}
 		}else if(valueInCondition.equals("ATOM")) {
 			do {
-				j = j + 1;
+				if(j==(text.size()-1)) {
+					break;
+				}else {
+					j = j + 1;
+				}
 				valueInCondition = text.get(j);
 			}while(valueInCondition.equals("("));
 			if(text.get(j+1).equals(")")) {
@@ -353,7 +375,11 @@ public class Decodificador {
 		}
 		j = i;
 		while(indicator != 0) {
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
 			valueInCondition = text.get(j);
 			if(valueInCondition.equals("(")) {
 				indicator = indicator + 1;
@@ -375,13 +401,21 @@ public class Decodificador {
 		int j = i;
 		String valueInCondition = text.get(j);
 		while(!valueInCondition.equals("COND")){
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
 			valueInCondition = text.get(j);
 		};
 		while((indicator != 0)&&(result.equals(""))) {
 			valueInCondition = text.get(j+1);
 			while((!valueInCondition.equals("="))&&(!valueInCondition.equals("EQUAL"))&&(!valueInCondition.equals(">"))&&(!valueInCondition.equals("<"))&&(!valueInCondition.equals("ATOM"))){
-				j = j + 1;
+				if(j==(text.size()-1)) {
+					break;
+				}else {
+					j = j + 1;
+				}
 				valueInCondition = text.get(j);
 				if(valueInCondition.equals("(")) {
 					indicator = indicator + 1;
@@ -396,7 +430,11 @@ public class Decodificador {
 				if(resultBool.equals("T")) {
 					valueInCondition = text.get(j);
 					while((valueInCondition.equals(")"))||(valueInCondition.equals("("))) {
-						j = j + 1;
+						if(j==(text.size()-1)) {
+							break;
+						}else {
+							j = j + 1;
+						}
 						valueInCondition = text.get(j);
 						if(valueInCondition.equals("(")) {
 							indicator = indicator + 1;
@@ -458,7 +496,11 @@ public class Decodificador {
 			OperatorStack.push(valueInOperation);
 		}
 		while((indicator != 0)||(OperatorStack.size()!=3)) {
-			j = j + 1;
+			if(j==(text.size()-1)) {
+				break;
+			}else {
+				j = j + 1;
+			}
 			valueInOperation = text.get(j);
 				
 			if(valueInOperation.equals("(")) {
@@ -488,14 +530,22 @@ public class Decodificador {
 					if(valueInOperation.equals(functionName)) {
 						saved = true;
 						i = j;
-						if(OperatorStack.size()!=3){
+						if(OperatorStack.size()!=3 ){
 							OperatorStack.push(executeFun(k));
+						}else {
+							if(j==(text.size()-1)) {
+								break;
+							}else {
+								j = j + 1;
+							}
 						}
 						j = i;
 					}else if(functionParams.containsKey(valueInOperation)) {
 						saved = true;
 						if(OperatorStack.size()!=3){
 							OperatorStack.push(functionParams.get(valueInOperation));
+						}else {
+							break;
 						}
 					}
 				}
@@ -503,16 +553,24 @@ public class Decodificador {
 				if(!saved) {
 					if(OperatorStack.size()!=3) {
 						OperatorStack.push(valueInOperation);
+					}else {
+						break;
 					}
 				}
 			}
 		}
 		i = j;
-		String num2 = OperatorStack.pop();
-		String num1 = OperatorStack.pop();
-		String signOperator= OperatorStack.pop();
-		result = MyCalculator.Calculate(num1, num2, signOperator);
-		OperatorStack.push(result);
+		String num2 ;
+		String num1;
+		String signOperator;
+		while(OperatorStack.size()!=1) {
+			num2=OperatorStack.pop();
+			num1=OperatorStack.pop();
+			signOperator=OperatorStack.pop();
+			result=MyCalculator.Calculate(num1,num2,signOperator);
+			OperatorStack.push(result);
+			}
+		result= OperatorStack.pop();
 		return result;
 	}
 	
